@@ -50,7 +50,7 @@ k.scene("game", () => {
         if (k.isKeyDown("right") || k.isKeyDown("d")) {
             player.pos.x += playerSpeed * k.dt();
         }
-        if (k.isKeyDown("up" || k.isKeyDown("w"))) {
+        if (k.isKeyDown("up") || k.isKeyDown("w")) {
             player.pos.y -= playerSpeed * k.dt();
         }
         if (k.isKeyDown("down") || k.isKeyDown("s")) {
