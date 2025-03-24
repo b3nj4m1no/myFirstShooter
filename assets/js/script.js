@@ -9,8 +9,50 @@ k.loadSprite("enemy", "./assets/players/enemy/enemy.png");
 k.loadFont("mania", "./assets/fonts/mania.ttf");
 
 let debugMode = false;
+let gameDifficulty = "easy";  // Impostazione della difficoltà iniziale
 
-k.scene("game", () => {
+// Funzione per aggiornare i parametri di gioco in base alla difficoltà
+function setGameDifficulty(difficulty) {
+    if (difficulty === "easy") {
+        return { playerSpeed: 200, spawnRate: 3, enemyHealth: 1, enemyShootRate: 3 };  // I nemici sparano ogni 2 secondi
+    } else if (difficulty === "medium") {
+        return { playerSpeed: 300, spawnRate: 2, enemyHealth: 2, enemyShootRate: 2 };  // I nemici sparano ogni 1.5 secondi
+    } else if (difficulty === "hard") {
+        return { playerSpeed: 400, spawnRate: 1, enemyHealth: 3, enemyShootRate: 1 };  // I nemici sparano ogni secondo
+    }
+    return { playerSpeed: 200, spawnRate: 1, enemyHealth: 3, enemyShootRate: 2 }; // Default
+}
+
+// Menu per selezionare la difficoltà
+k.scene("menu", () => {
+    k.add([k.text("Scegli la difficoltà", { size: 50, font: "mania" }), k.pos(k.center()), k.anchor("center")]);
+    k.add([k.text("1. Easy", { size: 30, font: "mania" }), k.pos(k.center().x, k.center().y + 60), k.anchor("center")]);
+    k.add([k.text("2. Medium", { size: 30, font: "mania" }), k.pos(k.center().x, k.center().y + 100), k.anchor("center")]);
+    k.add([k.text("3. Hard", { size: 30, font: "mania" }), k.pos(k.center().x, k.center().y + 140), k.anchor("center")]);
+
+    k.onKeyPress("1", () => {
+        gameDifficulty = "easy";
+        startGame();
+    });
+    k.onKeyPress("2", () => {
+        gameDifficulty = "medium";
+        startGame();
+    });
+    k.onKeyPress("3", () => {
+        gameDifficulty = "hard";
+        startGame();
+    });
+});
+
+// Funzione per avviare il gioco
+function startGame() {
+    const { playerSpeed, spawnRate, enemyHealth, enemyShootRate } = setGameDifficulty(gameDifficulty);
+
+    k.go("game", { playerSpeed, spawnRate, enemyHealth, enemyShootRate });
+}
+
+// Scene del gioco
+k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
     k.camScale(1.5);
 
     const player = k.add([
@@ -38,9 +80,6 @@ k.scene("game", () => {
         k.fixed(),
         "livesLabel",
     ]);
-
-    // Variabili per il movimento continuo
-    const playerSpeed = 200;
 
     player.onUpdate(() => {
         // Movimento continuo in base ai tasti premuti
@@ -97,13 +136,29 @@ k.scene("game", () => {
             k.area(),
             k.pos(selectedSpawnPoint),
             k.rotate(0),
-            k.health(3),
+            k.health(enemyHealth),
             "enemy",
         ]);
 
         // Movimento dei nemici verso il giocatore
         enemy.onUpdate(() => {
             enemy.moveTo(player.pos, 60); // I nemici si muovono verso il giocatore con velocità di 60
+        });
+
+        // Proiettili nemici
+        k.loop(enemyShootRate, () => {
+            if (enemy.exists()) {
+                k.add([
+                    k.rect(8, 8, { radius: 4 }),
+                    k.pos(enemy.pos),
+                    k.area(),
+                    k.anchor(k.vec2(-2, -2)),
+                    k.offscreen({ destroy: true }),
+                    k.rotate(enemy.angle),
+                    k.move(player.pos.sub(enemy.pos).unit(), 400),
+                    "enemyBullet",
+                ]);
+            }
         });
 
         enemy.onCollide("player", (player) => {
@@ -126,26 +181,9 @@ k.scene("game", () => {
             score.text = `Score: ${playerScore}`;
             k.destroy(enemy);
         });
-
-        if (!debugMode) {
-            k.loop(3, () => {
-                if (enemy.exists()) {
-                    k.add([
-                        k.rect(8, 8, { radius: 4 }),
-                        k.pos(enemy.pos),
-                        k.area(),
-                        k.anchor(k.vec2(-2, -2)),
-                        k.offscreen({ destroy: true }),
-                        k.rotate(enemy.angle),
-                        k.move(player.pos.sub(enemy.pos).unit(), 600),
-                        "enemyBullet",
-                    ]);
-                }
-            });
-        }
     }
 
-    k.loop(1, () => {
+    k.loop(spawnRate, () => {
         makeEnemy();
     });
 
@@ -159,6 +197,7 @@ k.scene("game", () => {
     });
 });
 
+// Scene di Game Over
 k.scene("gameover", () => {
     k.add([
         k.text("Game Over! Click to Restart", { size: 50, font: "mania" }),
@@ -166,11 +205,11 @@ k.scene("gameover", () => {
         k.anchor("center"),
     ]);
 
-    k.onClick(() => k.go("game"));
+    k.onClick(() => k.go("menu"));
 });
 
 k.onKeyPress("f1", () => {
     debugMode = !debugMode;
 });
 
-k.go("game");
+k.go("menu");  // Inizia dal menu
