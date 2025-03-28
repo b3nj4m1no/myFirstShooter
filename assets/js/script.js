@@ -9,16 +9,15 @@ k.loadSprite("enemy", "./assets/players/enemy/enemy.png");
 k.loadFont("mania", "./assets/fonts/mania.ttf");
 
 let debugMode = false;
-let gameDifficulty = "easy";  // Impostazione della difficoltà iniziale
+let gameDifficulty = "easy"; 
 
-// Funzione per aggiornare i parametri di gioco in base alla difficoltà
 function setGameDifficulty(difficulty) {
     if (difficulty === "easy") {
-        return { playerSpeed: 200, spawnRate: 3, enemyHealth: 1, enemyShootRate: 3 };  // I nemici sparano ogni 2 secondi
+        return { playerSpeed: 200, spawnRate: 3, enemyHealth: 1, enemyShootRate: 3 };  // 2 secondi
     } else if (difficulty === "medium") {
-        return { playerSpeed: 300, spawnRate: 2, enemyHealth: 2, enemyShootRate: 2 };  // I nemici sparano ogni 1.5 secondi
+        return { playerSpeed: 300, spawnRate: 2, enemyHealth: 2, enemyShootRate: 2 };  // 1.5 secondi
     } else if (difficulty === "hard") {
-        return { playerSpeed: 400, spawnRate: 1, enemyHealth: 3, enemyShootRate: 1 };  // I nemici sparano ogni secondo
+        return { playerSpeed: 400, spawnRate: 1, enemyHealth: 3, enemyShootRate: 1 };  // 1 secondo
     }
     return { playerSpeed: 200, spawnRate: 1, enemyHealth: 3, enemyShootRate: 2 }; // Default
 }
@@ -44,14 +43,12 @@ k.scene("menu", () => {
     });
 });
 
-// Funzione per avviare il gioco
 function startGame() {
     const { playerSpeed, spawnRate, enemyHealth, enemyShootRate } = setGameDifficulty(gameDifficulty);
 
     k.go("game", { playerSpeed, spawnRate, enemyHealth, enemyShootRate });
 }
 
-// Scene del gioco
 k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
     k.camScale(1.5);
 
@@ -61,7 +58,7 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
         k.area(),
         k.pos(k.center()),
         k.rotate(0),
-        k.health(5), // Player now has 5 lives
+        k.health(5), // 5 vite
         "player",
     ]);
 
@@ -82,7 +79,6 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
     ]);
 
     player.onUpdate(() => {
-        // Movimento continuo in base ai tasti premuti
         if (k.isKeyDown("left") || k.isKeyDown("a")) {
             player.pos.x -= playerSpeed * k.dt();
         }
@@ -96,7 +92,6 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
             player.pos.y += playerSpeed * k.dt();
         }
 
-        // Ruota il giocatore verso il mouse
         player.rotateTo(k.mousePos().angle(player.pos));
     });
 
@@ -140,12 +135,10 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
             "enemy",
         ]);
 
-        // Movimento dei nemici verso il giocatore
         enemy.onUpdate(() => {
-            enemy.moveTo(player.pos, 60); // I nemici si muovono verso il giocatore con velocità di 60
+            enemy.moveTo(player.pos, 60); 
         });
 
-        // Proiettili nemici
         k.loop(enemyShootRate, () => {
             if (enemy.exists()) {
                 k.add([
