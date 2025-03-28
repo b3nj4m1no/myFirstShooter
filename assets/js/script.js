@@ -22,7 +22,7 @@ function setGameDifficulty(difficulty) {
     return { playerSpeed: 200, spawnRate: 1, enemyHealth: 3, enemyShootRate: 2 }; // Default
 }
 
-// Menu per selezionare la difficoltà
+
 k.scene("menu", () => {
     k.add([k.text("Scegli la difficoltà", { size: 50, font: "mania" }), k.pos(k.center()), k.anchor("center")]);
     k.add([k.text("1. Easy", { size: 30, font: "mania" }), k.pos(k.center().x, k.center().y + 60), k.anchor("center")]);
@@ -190,7 +190,6 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
     });
 });
 
-// Scene di Game Over
 k.scene("gameover", () => {
     k.add([
         k.text("Game Over! Click to Restart", { size: 50, font: "mania" }),
@@ -205,4 +204,4 @@ k.onKeyPress("f1", () => {
     debugMode = !debugMode;
 });
 
-k.go("menu");  // Inizia dal menu
+k.go("menu");  
