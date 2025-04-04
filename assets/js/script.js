@@ -13,15 +13,14 @@ let gameDifficulty = "easy";
 
 function setGameDifficulty(difficulty) {
     if (difficulty === "easy") {
-        return { playerSpeed: 200, spawnRate: 3, enemyHealth: 1, enemyShootRate: 3 };  // 2 secondi
+        return { playerSpeed: 200, spawnRate: 3, enemyHealth: 1, enemyShootRate: 3 };
     } else if (difficulty === "medium") {
-        return { playerSpeed: 300, spawnRate: 2, enemyHealth: 2, enemyShootRate: 2 };  // 1.5 secondi
+        return { playerSpeed: 300, spawnRate: 2, enemyHealth: 2, enemyShootRate: 2 };
     } else if (difficulty === "hard") {
-        return { playerSpeed: 400, spawnRate: 1, enemyHealth: 3, enemyShootRate: 1 };  // 1 secondo
+        return { playerSpeed: 400, spawnRate: 1, enemyHealth: 3, enemyShootRate: 1 };
     }
-    return { playerSpeed: 200, spawnRate: 1, enemyHealth: 3, enemyShootRate: 2 }; // Default
+    return { playerSpeed: 200, spawnRate: 1, enemyHealth: 3, enemyShootRate: 2 };
 }
-
 
 k.scene("menu", () => {
     k.add([k.text("Scegli la difficoltà", { size: 50, font: "mania" }), k.pos(k.center()), k.anchor("center")]);
@@ -45,7 +44,6 @@ k.scene("menu", () => {
 
 function startGame() {
     const { playerSpeed, spawnRate, enemyHealth, enemyShootRate } = setGameDifficulty(gameDifficulty);
-
     k.go("game", { playerSpeed, spawnRate, enemyHealth, enemyShootRate });
 }
 
@@ -58,7 +56,7 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
         k.area(),
         k.pos(k.center()),
         k.rotate(0),
-        k.health(5), // 5 vite
+        k.health(5),
         "player",
     ]);
 
@@ -136,7 +134,9 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
         ]);
 
         enemy.onUpdate(() => {
-            enemy.moveTo(player.pos, 60); 
+            enemy.moveTo(player.pos, 60);
+            // Aggiunto: ruota il nemico verso il player
+            enemy.rotateTo(player.pos.sub(enemy.pos).angle());
         });
 
         k.loop(enemyShootRate, () => {
@@ -204,4 +204,4 @@ k.onKeyPress("f1", () => {
     debugMode = !debugMode;
 });
 
-k.go("menu");  
+k.go("menu");
