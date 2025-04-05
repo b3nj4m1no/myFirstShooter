@@ -19,7 +19,7 @@ Un gioco sparatutto spaziale 2D con diverse difficoltà e sistema di punteggio, 
 - **F1**: Attiva/disattiva modalità debug 
 - **1/2/3** nel menu: Seleziona difficoltà
 
-### Todo
+## Todo
 - [ ] Tiled Map
 
 ### Obiettivo
