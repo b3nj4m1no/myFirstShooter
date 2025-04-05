@@ -1,6 +1,6 @@
 # myFirstShooter
 
-./assets/images/video.mp4 
+https://github.com/b3nj4m1no/myFirstShooter/blob/main/assets/images/video.mp4
 
 Un gioco sparatutto spaziale 2D con diverse difficoltà e sistema di punteggio, sviluppato con Kaplay.js.
 
