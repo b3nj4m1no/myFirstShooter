@@ -19,6 +19,9 @@ Un gioco sparatutto spaziale 2D con diverse difficoltà e sistema di punteggio, 
 - **F1**: Attiva/disattiva modalità debug 
 - **1/2/3** nel menu: Seleziona difficoltà
 
+### Todo
+- [ ] Tiled Map
+
 ### Obiettivo
 Sopravvivi il più a lungo possibile eliminando i nemici e accumulando punti.
 
