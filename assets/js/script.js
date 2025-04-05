@@ -63,7 +63,7 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
     let playerScore = 0;
 
     const score = k.add([
-        k.text("Score: 0", { size: 50, font: "mania" }),
+        k.text("Score 0", { size: 50, font: "mania" }),
         k.pos(20, 20),
         k.fixed(),
         "scoreLabel",
@@ -135,7 +135,6 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
 
         enemy.onUpdate(() => {
             enemy.moveTo(player.pos, 60);
-            // Aggiunto: ruota il nemico verso il player
             enemy.rotateTo(player.pos.sub(enemy.pos).angle());
         });
 
@@ -171,7 +170,7 @@ k.scene("game", ({ playerSpeed, spawnRate, enemyHealth, enemyShootRate }) => {
                 return;
             }
             playerScore += 10;
-            score.text = `Score: ${playerScore}`;
+            score.text = `Score ${playerScore}`;
             k.destroy(enemy);
         });
     }
